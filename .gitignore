@@ -1,0 +1,14 @@
+# TypeScript compilation output.
+js/
+
+# Build output.
+lib/
+
+# NPM dependencies.
+node_modules/
+
+# TypeScript definitions.
+typings/
+
+# Vim.
+*.sw*

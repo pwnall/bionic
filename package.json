@@ -1,0 +1,46 @@
+{
+  "name": "bionic",
+  "version": "0.1.0",
+  "description": "Browser-side view rendering engine",
+  "keywords": [
+    "browser",
+    "client",
+    "rendering",
+    "template",
+    "view"
+  ],
+  "homepage": "https://github.com/pwnall/bionic",
+  "author": "Victor Costan <victor@costan.us> (http://www.costan.us)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pwnall/bionic.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pwnall/bionic/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": ">= 0",
+    "karma": ">= 0.13.22",
+    "karma-chai": ">= 0",
+    "karma-chrome-launcher": ">= 1.0.1",
+    "karma-firefox-launcher": ">= 1.0.0",
+    "karma-mocha": ">= 1.0.1",
+    "karma-sourcemap-loader": ">= 0.3.7",
+    "karma-webpack": ">= 1.7.0",
+    "mocha": ">= 2.5.3",
+    "tslint": ">= 3.10.2",
+    "tslint-loader": ">= 0",
+    "ts-loader": ">= 0.8.2",
+    "typescript": ">= 1.8.10",
+    "typings": ">= 0",
+    "webpack": ">= 1.13.1"
+  },
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "scripts": {
+    "test": "node_modules/.bin/karma start --single-run",
+    "watch": "node_modules/.bin/karma start"
+  }
+}
