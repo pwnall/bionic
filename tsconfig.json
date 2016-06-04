@@ -24,6 +24,7 @@
   ],
   "filesGlob": [
     "src/**/*.ts",
+    "test/**/*.ts",
     "typings/index.d.ts"
   ],
   "formatCodeOptions": {
@@ -44,10 +45,16 @@
     "src/binders.ts",
     "src/binding.ts",
     "src/builder.ts",
+    "src/builtin_binders.ts",
     "src/filters.ts",
     "src/index.ts",
     "src/template.ts",
     "src/view.ts",
+    "test/binders_test.ts",
+    "test/builder_test.ts",
+    "test/builtin_binders_test.ts",
+    "test/filters_test.ts",
+    "test/template_test.ts",
     "typings/index.d.ts"
   ],
   "atom": {
