@@ -35,11 +35,13 @@
     "ts-loader": ">= 0.8.2",
     "typescript": ">= 1.8.10",
     "typings": ">= 0",
-    "webpack": ">= 1.13.1"
+    "webpack": ">= 1.13.1",
+    "webpack-fail-plugin": ">= 0"
   },
   "main": "lib/index.js",
   "typings": "lib/index",
   "scripts": {
+    "prepublish": "node_modules/.bin/webpack && node_modules/.bin/tsc --project ./ --declaration && cp js/src/*.d.ts lib/",
     "test": "node_modules/.bin/karma start --single-run",
     "watch": "node_modules/.bin/karma start"
   }

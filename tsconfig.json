@@ -12,6 +12,7 @@
     "noLib": false,
     "outDir": "js/",
     "removeComments": true,
+    "rootDir": ".",
     "sourceMap": true,
     "target": "es5"
   },
@@ -21,18 +22,35 @@
     "lib",
     "node_modules"
   ],
+  "filesGlob": [
+    "src/**/*.ts",
+    "typings/index.d.ts"
+  ],
   "formatCodeOptions": {
-      "convertTabsToSpaces": true,
-      "indentSize": 2,
-      "insertSpaceAfterCommaDelimiter": true,
-      "insertSpaceAfterSemicolonInForStatements": true,
-      "insertSpaceBeforeAndAfterBinaryOperators": true,
-      "insertSpaceAfterKeywordsInControlFlowStatements": true,
-      "insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
-      "insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
-      "newLineCharacter": "\n",
-      "placeOpenBraceOnNewLineForFunctions": false,
-      "placeOpenBraceOnNewLineForControlBlocks": false,
-      "tabSize": 2
+    "convertTabsToSpaces": true,
+    "indentSize": 2,
+    "insertSpaceAfterCommaDelimiter": true,
+    "insertSpaceAfterSemicolonInForStatements": true,
+    "insertSpaceBeforeAndAfterBinaryOperators": true,
+    "insertSpaceAfterKeywordsInControlFlowStatements": true,
+    "insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+    "insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
+    "newLineCharacter": "\n",
+    "placeOpenBraceOnNewLineForFunctions": false,
+    "placeOpenBraceOnNewLineForControlBlocks": false,
+    "tabSize": 2
+  },
+  "files": [
+    "src/binders.ts",
+    "src/binding.ts",
+    "src/builder.ts",
+    "src/filters.ts",
+    "src/index.ts",
+    "src/template.ts",
+    "src/view.ts",
+    "typings/index.d.ts"
+  ],
+  "atom": {
+    "rewriteTsconfig": true
   }
 }

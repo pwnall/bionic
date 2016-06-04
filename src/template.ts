@@ -9,7 +9,7 @@ export class Template {
   public fragment: DocumentFragment;
 
   /**
-   * The class used to identify elements with data bindings.
+   * The class name used to identify elements with data bindings.
    *
    * This class is removed from the elements right after the template is
    * instantiated, so it can be considered an implementation detail. As long as
@@ -17,6 +17,9 @@ export class Template {
    * class being added and removed.
    */
   private bindingClass: string;
+
+  /** CSS selector for the class on elements with data bindings. */
+  private bindingClassSelector: string;
 
   /**
    * Constructor exposed to facilitate custom builders.
@@ -29,6 +32,8 @@ export class Template {
       bindingClass: string) {
     this.fragment = fragment;
     this.bindings = bindings;
+    this.bindingClass = bindingClass;
+    this.bindingClassSelector = `.${bindingClass}`;
   }
 
   /**
@@ -38,18 +43,15 @@ export class Template {
    * template's DocumentFragment, before the DOM tree is inserted into its host
    * document.
    */
-  public extractBoundElements(fragment: Element): Array<Element> {
-    // tslint:disable:max-line-length
-    // http://developer.mozilla.org/docs/Web/API/Document/getElementsByClassName
-    // tslint:enable:max-line-length
+  public extractBoundElements(domRoot: DocumentFragment): Array<Element> {
+    // DocumentFragment#querySelectorAll is standardized in Selectors API Level
+    // 1,  and supported in IE 8 and above.
+    // https://developer.mozilla.org/docs/Web/API/DocumentFragment
     const boundElementList: NodeListOf<Element> =
-        fragment.getElementsByClassName(this.bindingClass);
+        domRoot.querySelectorAll(this.bindingClassSelector);
 
-    // We need to copy the elements into an array because
-    // Document#getElementsByClassName returns a live HTMLCollection. As we
-    // remove the bindings class name from the elements, they will leave the
-    // collection. Bonus: we don't have to deal with the janky surrogates that
-    // DOM provides for JS arrays.
+    // We copy the elements into an array because accessing NodeList elements
+    // is supposed to be expensive, due to proxying.
     const boundElements: Array<Element> = Array.prototype.slice.call(
         boundElementList);
 
@@ -72,10 +74,11 @@ export class Template {
    * should use extractBoundElements() before attaching the DOM tree to its
    * host element.
    */
-  public instantiateFor(host: Element): Element {
+  public instantiateFor(host: Element): DocumentFragment {
     // Document#importNode(node, deep) is standardized in DOM2, and supported
     // by IE 9 and above.
     // http://developer.mozilla.org/docs/Web/API/Document/importNode
-    return host.ownerDocument.importNode(this.fragment, true) as Element;
+    return host.ownerDocument.importNode(this.fragment, true) as
+        DocumentFragment;
   }
 }

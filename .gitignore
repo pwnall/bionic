@@ -10,5 +10,8 @@ node_modules/
 # TypeScript definitions.
 typings/
 
+# npm garbage.
+npm-debug.log
+
 # Vim.
 *.sw*

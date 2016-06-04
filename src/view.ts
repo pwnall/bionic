@@ -11,7 +11,7 @@ export class View<ContextType> {
   /** The bindings . */
   private context: ContextType;
   /** The DOM tree created by copying the template's DocumentFragment. */
-  private domRoot: Element;
+  private domRoot: DocumentFragment;
   /** The template instantiated by this view. */
   private template: Template;
 

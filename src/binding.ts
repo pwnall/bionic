@@ -5,7 +5,7 @@ import { Filter } from "./filters";
 export class Binding {
   /**
    * All the elements that have bindings are tagged with a special class, so
-   * they can be easily retrieved
+   * they can be easily retrieved.
    */
   public elementIndex: number;
 

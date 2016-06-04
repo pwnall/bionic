@@ -28,7 +28,7 @@ export class BinderRegistry {
    * More specific prefixes like "class-name-" will get matched before less
    * specific prefixes like "class-" and "" (catch-all).
    */
-  public static dynamicBinderComparator(
+  private static dynamicBinderComparator(
       a: DynamicBinder, b: DynamicBinder): number {
     return b[0].length - a[0].length;
   }
