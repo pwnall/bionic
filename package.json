@@ -41,7 +41,7 @@
   "main": "lib/index.js",
   "typings": "lib/index",
   "scripts": {
-    "prepublish": "node_modules/.bin/webpack && node_modules/.bin/tsc --project ./ --declaration && cp js/src/*.d.ts lib/",
+    "prepublish": "node_modules/.bin/typings install && node_modules/.bin/webpack && node_modules/.bin/tsc --project ./ --declaration && cp js/src/*.d.ts lib/",
     "test": "node_modules/.bin/karma start --single-run",
     "watch": "node_modules/.bin/karma start"
   }
