@@ -1,5 +1,5 @@
 import { Binder, BinderFactory, BinderRegistry } from "./binders";
-import { Builder } from "./builder";
+import { Builder, builder } from "./builder";
 import { BuiltinBinders } from "./builtin_binders";
 import { Formatter,  FormatterRegistry } from "./formatters";
 import { Template } from "./template";
@@ -10,6 +10,7 @@ export {
   BinderFactory,
   BinderRegistry,
   Builder,
+  builder,
   BuiltinBinders,
   Formatter,
   FormatterRegistry,
