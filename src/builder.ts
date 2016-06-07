@@ -1,6 +1,6 @@
 import { Binder, BinderRegistry } from "./binders";
 import { Binding } from "./binding";
-import { Filter, FilterRegistry } from "./filters";
+import { Formatter, FormatterRegistry } from "./formatters";
 import { Template } from "./template";
 
 /** Builds templates from strings. */
@@ -15,8 +15,8 @@ export class Builder {
   public bindingClass: string = "bionic-3pskthefgrswc";
   /** The regiistry used to resolve the binders specified in the template. */
   public binders: BinderRegistry = new BinderRegistry();
-  /** The registry used to resolve the filters specified in the template. */
-  public filters: FilterRegistry = new FilterRegistry();
+  /** The registry used to resolve the formatters specified in the template. */
+  public formatters: FormatterRegistry = new FormatterRegistry();
 
   /** Sort comparator for BindingAttribute instances that orders by name. */
   public static attributeComparator(
@@ -89,13 +89,13 @@ export class Builder {
 
     const valueSegments: Array<string> = attribute.value.split("|");
     const dataPath: string = valueSegments[0].trim();
-    const filterChain: Array<Filter> = [];
+    const formatterChain: Array<Formatter> = [];
     for (let i: number = 1; i < valueSegments.length; ++i) {
-      const filterName: string = valueSegments[i].trim();
-      filterChain.push(this.filters.resolve(filterName));
+      const formatterName: string = valueSegments[i].trim();
+      formatterChain.push(this.formatters.resolve(formatterName));
     }
 
-    return new Binding(elementIndex, dataPath, filterChain, binder);
+    return new Binding(elementIndex, dataPath, formatterChain, binder);
   };
 
   /**

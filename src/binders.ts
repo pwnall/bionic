@@ -16,7 +16,7 @@ export class BinderRegistry {
 
   /** Creates an empty registry. */
   public constructor() {
-    // See FilterRegistry for Map compatibility.
+    // See FormatterRegistry for Map compatibility.
     this.binders = new Map<string, Binder>();
     this.factories = [];
   }
@@ -35,7 +35,7 @@ export class BinderRegistry {
 
   /** Registers a statically named binder. */
   public add(name: string, binder: Binder): void {
-    // See FilterRegistry for Map compatibility.
+    // See FormatterRegistry for Map compatibility.
     if (this.binders.has(name)) {
       throw new RangeError(`Binder "${name}" already registered`);
     }
@@ -54,9 +54,9 @@ export class BinderRegistry {
     this.factories.sort(BinderRegistry.dynamicBinderComparator);
   }
 
-  /** Looks up a filter in this registry. */
+  /** Looks up a formatter in this registry. */
   public resolve(name: string): Binder {
-    // See FilterRegistry for Map compatibility.
+    // See FormatterRegistry for Map compatibility.
     const staticBinder: Binder = this.binders.get(name);
     if (staticBinder !== undefined) {
       return staticBinder;

@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { Binding } from "../src/binding";
 import { Binder } from "../src/binders";
 import { BindingAttribute, Builder, builder } from "../src/builder";
-import { Filter } from "../src/filters";
+import { Formatter } from "../src/formatters";
 import { Template } from "../src/template";
 
 describe("buillder", () => {
@@ -39,9 +39,9 @@ describe("Builder", () => {
 
   const nullBinder: Binder = (target, value) => { return; };
   const fooBinder: Binder = (target, value) => { return; };
-  const nullFilter: Filter = (value) => { return value; };
-  const negateFilter: Filter = (value) => { return value; };
-  const fooFilter: Filter = (value) => { return value; };
+  const nullFormatter: Formatter = (value) => { return value; };
+  const negateFormatter: Formatter = (value) => { return value; };
+  const fooFormatter: Formatter = (value) => { return value; };
   let builder: Builder;
   beforeEach(() => {
     builder = new Builder();
@@ -49,9 +49,9 @@ describe("Builder", () => {
     builder.bindingClass = "bionicBinding";
     builder.binders.add("null", nullBinder);
     builder.binders.add("foo", fooBinder);
-    builder.filters.add("null", nullFilter);
-    builder.filters.add("negate", negateFilter);
-    builder.filters.add("foo", fooFilter);
+    builder.formatters.add("null", nullFormatter);
+    builder.formatters.add("negate", negateFormatter);
+    builder.formatters.add("foo", fooFormatter);
   });
 
   describe("#bindingAttributes", () => {
@@ -105,46 +105,46 @@ describe("Builder", () => {
   });
 
   describe("#bindingFor", () => {
-    let filterlessAttr: BindingAttribute;
-    let filterAttr: BindingAttribute;
-    let multiFilterAttr: BindingAttribute;
+    let formatterlessAttr: BindingAttribute;
+    let formatterAttr: BindingAttribute;
+    let multiFormatterAttr: BindingAttribute;
     beforeEach(() => {
       const fragment: DocumentFragment = Builder.parse(
         '<div rv-null="model:isNull"></div>' +
         '<div rv-null="model.path | negate"></div>' +
         '<div rv-null="model.path|negate | null | foo"></div>'
       );
-      filterlessAttr =
+      formatterlessAttr =
           builder.bindingAttributes(fragment.childNodes[0] as Element)[0];
-      filterAttr =
+      formatterAttr =
           builder.bindingAttributes(fragment.childNodes[1] as Element)[0];
-      multiFilterAttr =
+      multiFormatterAttr =
           builder.bindingAttributes(fragment.childNodes[2] as Element)[0];
     });
 
-    it("builds a filter-less element correctly", () => {
-      const binding: Binding = builder.bindingFor(filterlessAttr, 42);
+    it("builds a formatter-less element correctly", () => {
+      const binding: Binding = builder.bindingFor(formatterlessAttr, 42);
       expect(binding.elementIndex).to.equal(42);
       expect(binding.binder).to.equal(nullBinder);
       expect(binding.dataPath).to.equal("model:isNull");
-      expect(binding.filterChain).to.deep.equal([]);
+      expect(binding.formatterChain).to.deep.equal([]);
     });
 
-    it("builds a one-filter element correctly", () => {
-      const binding: Binding = builder.bindingFor(filterAttr, 42);
+    it("builds a one-formatter element correctly", () => {
+      const binding: Binding = builder.bindingFor(formatterAttr, 42);
       expect(binding.elementIndex).to.equal(42);
       expect(binding.binder).to.equal(nullBinder);
       expect(binding.dataPath).to.equal("model.path");
-      expect(binding.filterChain).to.deep.equal([negateFilter]);
+      expect(binding.formatterChain).to.deep.equal([negateFormatter]);
     });
 
-    it("builds a multi-filter element correctly", () => {
-      const binding: Binding = builder.bindingFor(multiFilterAttr, 42);
+    it("builds a multi-formatter element correctly", () => {
+      const binding: Binding = builder.bindingFor(multiFormatterAttr, 42);
       expect(binding.elementIndex).to.equal(42);
       expect(binding.binder).to.equal(nullBinder);
       expect(binding.dataPath).to.equal("model.path");
-      expect(binding.filterChain).to.deep.equal(
-          [negateFilter, nullFilter, fooFilter]);
+      expect(binding.formatterChain).to.deep.equal(
+          [negateFormatter, nullFormatter, fooFormatter]);
     });
   });
 

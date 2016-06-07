@@ -1,5 +1,5 @@
 import { Binder } from "./binders";
-import { Filter } from "./filters";
+import { Formatter } from "./formatters";
 
 /** Connects a DOM property to a piece of data (model attribute). */
 export class Binding {
@@ -22,7 +22,7 @@ export class Binding {
    * values of the functions that precede them in the chain. The return value
    * of the last value is passed into the DOM modification function.
    */
-  public filterChain: Array<Filter>;
+  public formatterChain: Array<Formatter>;
 
   /**
    * The binder performed when the data observed by this binding changes.
@@ -36,11 +36,11 @@ export class Binding {
    * instances directly.
    */
   public constructor(
-      elementIndex: number, dataPath: string, filterChain: Array<Filter>,
+      elementIndex: number, dataPath: string, formatterChain: Array<Formatter>,
       binder: Binder) {
     this.elementIndex = elementIndex;
     this.dataPath = dataPath;
-    this.filterChain = filterChain;
+    this.formatterChain = formatterChain;
     this.binder = binder;
   }
 };
@@ -50,4 +50,4 @@ export class Binding {
  * before it is passed to the code that modifies the DOM.
  *
  */
-export type FilterChain = Array<Filter>;
+export type FormatterChain = Array<Formatter>;

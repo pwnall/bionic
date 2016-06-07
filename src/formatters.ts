@@ -1,10 +1,10 @@
 /** Transforms observed data before it is provided to an binder. */
-export type Filter = (value: any) => any;
+export type Formatter = (value: any) => any;
 
-/** Resolves names to filters. */
-export class FilterRegistry {
-  /** Maps names to filters. */
-  private filters: Map<string, Filter>;
+/** Resolves names to formatters. */
+export class FormatterRegistry {
+  /** Maps names to formatters. */
+  private formatters: Map<string, Formatter>;
 
   /** Creates an empty registry. */
   public constructor() {
@@ -13,33 +13,33 @@ export class FilterRegistry {
     // tslint:disable:max-line-length
     // http://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map
     // tslint:enable:max-line-length
-    this.filters = new Map<string, Filter>();
+    this.formatters = new Map<string, Formatter>();
   }
 
-  /** Adds a filter to this registry. */
-  public add(name: string, filter: Filter): void {
-    if (this.filters.has(name)) {
-      throw new RangeError(`A filter named "${name}" was already registered`);
+  /** Adds a formatter to this registry. */
+  public add(name: string, formatter: Formatter): void {
+    if (this.formatters.has(name)) {
+      throw new RangeError(`Formatter named "${name}" was already registered`);
     }
 
     // Map#set() is standardized in ES 6, and supported by IE 11 and up.
     // tslint:disable:max-line-length
     // http://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map/set
     // tslint:enable:max-line-length
-    this.filters.set(name, filter);
+    this.formatters.set(name, formatter);
   }
 
-  /** Looks up a filter in this registry. */
-  public resolve(name: string): Filter {
+  /** Looks up a formatter in this registry. */
+  public resolve(name: string): Formatter {
     // Map#get() is standardized in ES 6, and supported by IE 11 and up.
     // tslint:disable:max-line-length
     // http://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map/get
     // tslint:enable:max-line-length
-    const filter: Filter = this.filters.get(name);
+    const formatter: Formatter = this.formatters.get(name);
 
-    if (filter === undefined) {
-      throw new RangeError(`Filter "${name}" not found`);
+    if (formatter === undefined) {
+      throw new RangeError(`Formatter "${name}" not found`);
     }
-    return filter;
+    return formatter;
   }
 }
