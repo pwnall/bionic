@@ -1,3 +1,4 @@
+import { AdapterRegistry, ModelPath } from "./adapters";
 import { Binder, BinderRegistry } from "./binders";
 import { Binding } from "./binding";
 import { Formatter, FormatterRegistry } from "./formatters";
@@ -13,7 +14,9 @@ export class Builder {
    * See Template#bindingClass.
    */
   public bindingClass: string = "bionic-3pskthefgrswc";
-  /** The regiistry used to resolve the binders specified in the template. */
+  /** The registry used to resolve the model path operators in the template. */
+  public adapters: AdapterRegistry = new AdapterRegistry();
+  /** The registry used to resolve the binders specified in the template. */
   public binders: BinderRegistry = new BinderRegistry();
   /** The registry used to resolve the formatters specified in the template. */
   public formatters: FormatterRegistry = new FormatterRegistry();
@@ -88,14 +91,15 @@ export class Builder {
     const binder: Binder = this.binders.resolve(attribute.name);
 
     const valueSegments: Array<string> = attribute.value.split("|");
-    const dataPath: string = valueSegments[0].trim();
+    const modelPathString: string = valueSegments[0].trim();
+    const modelPath: ModelPath = this.adapters.parsePath(modelPathString);
     const formatterChain: Array<Formatter> = [];
     for (let i: number = 1; i < valueSegments.length; ++i) {
       const formatterName: string = valueSegments[i].trim();
       formatterChain.push(this.formatters.resolve(formatterName));
     }
 
-    return new Binding(elementIndex, dataPath, formatterChain, binder);
+    return new Binding(elementIndex, modelPath, formatterChain, binder);
   };
 
   /**

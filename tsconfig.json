@@ -42,6 +42,7 @@
     "tabSize": 2
   },
   "files": [
+    "src/adapters.ts",
     "src/binders.ts",
     "src/binding.ts",
     "src/builder.ts",
@@ -50,7 +51,9 @@
     "src/index.ts",
     "src/template.ts",
     "src/view.ts",
+    "test/adapters_test.ts",
     "test/binders_test.ts",
+    "test/binding_test.ts",
     "test/builder_test.ts",
     "test/builtin_binders_test.ts",
     "test/formatters_test.ts",

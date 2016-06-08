@@ -1,5 +1,6 @@
 import { expect } from "chai";
 
+import { Adapter } from "../src/adapters";
 import { Binding } from "../src/binding";
 import { Binder } from "../src/binders";
 import { BindingAttribute, Builder, builder } from "../src/builder";
@@ -37,16 +38,30 @@ describe("Builder", () => {
     });
   });
 
-  const nullBinder: Binder = (target, value) => { return; };
   const fooBinder: Binder = (target, value) => { return; };
-  const nullFormatter: Formatter = (value) => { return value; };
-  const negateFormatter: Formatter = (value) => { return value; };
   const fooFormatter: Formatter = (value) => { return value; };
+  const negateFormatter: Formatter = (value) => { return !value; };
+  const nullBinder: Binder = (target, value) => { return; };
+  const nullFormatter: Formatter = (value) => { return null; };
+  const stubAdapterFactory: (operator: string) => Adapter = (operator) => {
+    return (propertyName) => {
+      return {
+        _operator: operator,
+        _propertyName: propertyName,
+        get: (modelNode: any): void => { return modelNode; },
+        observe: (modelNode: any): void => { return; },
+      };
+    };
+  };
+
   let builder: Builder;
   beforeEach(() => {
     builder = new Builder();
     builder.bindingPrefix = "rv-";
     builder.bindingClass = "bionicBinding";
+    builder.adapters.add("/", stubAdapterFactory("/"));
+    builder.adapters.add(".", stubAdapterFactory("."));
+    builder.adapters.add(":", stubAdapterFactory(":"));
     builder.binders.add("null", nullBinder);
     builder.binders.add("foo", fooBinder);
     builder.formatters.add("null", nullFormatter);
@@ -126,25 +141,37 @@ describe("Builder", () => {
       const binding: Binding = builder.bindingFor(formatterlessAttr, 42);
       expect(binding.elementIndex).to.equal(42);
       expect(binding.binder).to.equal(nullBinder);
-      expect(binding.dataPath).to.equal("model:isNull");
       expect(binding.formatterChain).to.deep.equal([]);
+      expect(binding.modelPath).to.have.length(2);
+      expect(binding.modelPath[0]).to.have.property("_operator", "/");
+      expect(binding.modelPath[0]).to.have.property("_propertyName", "model");
+      expect(binding.modelPath[1]).to.have.property("_operator", ":");
+      expect(binding.modelPath[1]).to.have.property("_propertyName", "isNull");
     });
 
     it("builds a one-formatter element correctly", () => {
       const binding: Binding = builder.bindingFor(formatterAttr, 42);
       expect(binding.elementIndex).to.equal(42);
       expect(binding.binder).to.equal(nullBinder);
-      expect(binding.dataPath).to.equal("model.path");
       expect(binding.formatterChain).to.deep.equal([negateFormatter]);
+      expect(binding.modelPath).to.have.length(2);
+      expect(binding.modelPath[0]).to.have.property("_operator", "/");
+      expect(binding.modelPath[0]).to.have.property("_propertyName", "model");
+      expect(binding.modelPath[1]).to.have.property("_operator", ".");
+      expect(binding.modelPath[1]).to.have.property("_propertyName", "path");
     });
 
     it("builds a multi-formatter element correctly", () => {
       const binding: Binding = builder.bindingFor(multiFormatterAttr, 42);
       expect(binding.elementIndex).to.equal(42);
       expect(binding.binder).to.equal(nullBinder);
-      expect(binding.dataPath).to.equal("model.path");
       expect(binding.formatterChain).to.deep.equal(
           [negateFormatter, nullFormatter, fooFormatter]);
+      expect(binding.modelPath).to.have.length(2);
+      expect(binding.modelPath[0]).to.have.property("_operator", "/");
+      expect(binding.modelPath[0]).to.have.property("_propertyName", "model");
+      expect(binding.modelPath[1]).to.have.property("_operator", ".");
+      expect(binding.modelPath[1]).to.have.property("_propertyName", "path");
     });
   });
 

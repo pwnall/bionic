@@ -22,13 +22,13 @@ describe("FormatterRegistry", () => {
   });
 
   describe("#add", () => {
+    const nullFormatter: Formatter = (value) => { return value; };
+
     it("registers a new formatter", () => {
-      const nullFormatter: Formatter = (value) => { return value; };
       formatters.add("null", nullFormatter);
       expect(formatters.resolve("null")).to.equal(nullFormatter);
     });
     it("throws RangeError on name reuse", () => {
-      const nullFormatter: Formatter = (value) => { return value; };
       expect(() => formatters.add("negate", nullFormatter)).to.throw(
           RangeError, 'Formatter named "negate" was already registered');
     });

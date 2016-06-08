@@ -1,5 +1,6 @@
 import { Binder } from "./binders";
 import { Formatter } from "./formatters";
+import { ModelPath } from "./adapters";
 
 /** Connects a DOM property to a piece of data (model attribute). */
 export class Binding {
@@ -10,9 +11,9 @@ export class Binding {
   public elementIndex: number;
 
   /**
-   * Identifies the piece of data observed by this binding.
+   * Points to the piece of data in a model observed by this binding.
    */
-  public dataPath: string;
+  public modelPath: ModelPath;
 
   /**
    * The chain of functions that transform the data observed by this binding.
@@ -36,12 +37,28 @@ export class Binding {
    * instances directly.
    */
   public constructor(
-      elementIndex: number, dataPath: string, formatterChain: Array<Formatter>,
-      binder: Binder) {
+      elementIndex: number, modelPath: ModelPath,
+      formatterChain: Array<Formatter>, binder: Binder) {
     this.elementIndex = elementIndex;
-    this.dataPath = dataPath;
+    this.modelPath = modelPath;
     this.formatterChain = formatterChain;
     this.binder = binder;
+  }
+
+  /** Obtains the binding value. */
+  public update(target: Element, modelNode: any): void {
+    // Navigate the model graph.
+    for (let i: number = 0; i < this.modelPath.length; ++i) {
+      modelNode = this.modelPath[i].get(modelNode);
+    }
+    let value: any = modelNode;
+
+    // Navigate the formatter chain.
+    for (let i: number = 0; i < this.formatterChain.length; ++i) {
+      value = this.formatterChain[i](value);
+    }
+
+    this.binder(target, value);
   }
 };
 
