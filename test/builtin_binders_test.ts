@@ -7,10 +7,18 @@ import { BuiltinBinders } from "../src/builtin_binders";
 describe("BuiltinBinders", () => {
   let div: Element;
   let input: HTMLInputElement;
+  let tree: HTMLElement;
+  let secondDiv: Element;
   beforeEach(() => {
     div = document.createElement("div");
     input = document.createElement("input");
     input.setAttribute("type", "text");
+    tree = document.createElement("div");
+    tree.innerHTML =
+      '<div class="container">' +
+        '<div id="first">First</div><div class="second">Second</div>' +
+      "</div>";
+    secondDiv = tree.getElementsByClassName("second")[0];
   });
 
   describe(".html", () => {
@@ -108,6 +116,82 @@ describe("BuiltinBinders", () => {
     it("is registered with the default builder", () => {
       expect(builder.binders.resolve("disabled")).to.equal(
           BuiltinBinders.disabled);
+    });
+  });
+
+  describe(".if", () => {
+    describe("if the value is truthy", () => {
+      it("shows the target, can hide it when the value turns falsey", () => {
+        BuiltinBinders.ifBinder(secondDiv, true);
+        expect(tree.innerHTML).to.equal(
+          '<div class="container">' +
+            '<div id="first">First</div><div class="second">Second</div>' +
+          "</div>");
+        expect(secondDiv.parentNode).not.to.be.null;
+
+        BuiltinBinders.ifBinder(secondDiv, false);
+        expect(tree.innerHTML).to.equal(
+          '<div class="container">' +
+            '<div id="first">First</div><!--element replaced by bionic-->' +
+          "</div>");
+        expect(secondDiv.parentNode).to.be.null;
+      });
+    });
+
+    describe("if the value is falsey", () => {
+      it("hides the target, can show it when the value turns truthy", () => {
+        BuiltinBinders.ifBinder(secondDiv, false);
+        expect(tree.innerHTML).to.equal(
+          '<div class="container">' +
+            '<div id="first">First</div><!--element replaced by bionic-->' +
+          "</div>");
+        expect(secondDiv.parentNode).to.be.null;
+
+        BuiltinBinders.ifBinder(secondDiv, true);
+        expect(tree.innerHTML).to.equal(
+          '<div class="container">' +
+            '<div id="first">First</div><div class="second">Second</div>' +
+          "</div>");
+        expect(secondDiv.parentNode).not.to.be.null;
+      });
+    });
+  });
+
+  describe(".unless", () => {
+    describe("if the value is falsey", () => {
+      it("shows the target, can hide it when the value turns falsey", () => {
+        BuiltinBinders.unless(secondDiv, false);
+        expect(tree.innerHTML).to.equal(
+          '<div class="container">' +
+            '<div id="first">First</div><div class="second">Second</div>' +
+          "</div>");
+        expect(secondDiv.parentNode).not.to.be.null;
+
+        BuiltinBinders.unless(secondDiv, true);
+        expect(tree.innerHTML).to.equal(
+          '<div class="container">' +
+            '<div id="first">First</div><!--element replaced by bionic-->' +
+          "</div>");
+        expect(secondDiv.parentNode).to.be.null;
+      });
+    });
+
+    describe("if the value is truthy", () => {
+      it("hides the target, can show it when the value turns truthy", () => {
+        BuiltinBinders.unless(secondDiv, true);
+        expect(tree.innerHTML).to.equal(
+          '<div class="container">' +
+            '<div id="first">First</div><!--element replaced by bionic-->' +
+          "</div>");
+        expect(secondDiv.parentNode).to.be.null;
+
+        BuiltinBinders.unless(secondDiv, false);
+        expect(tree.innerHTML).to.equal(
+          '<div class="container">' +
+            '<div id="first">First</div><div class="second">Second</div>' +
+          "</div>");
+        expect(secondDiv.parentNode).not.to.be.null;
+      });
     });
   });
 

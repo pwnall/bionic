@@ -52,6 +52,38 @@ export namespace BuiltinBinders {
   };
   builder.binders.add("disabled", disabled);
 
+  function associatedCommentFor(target: Element): Comment {
+    let comment: Comment = (target as any)._bionicComment;
+    if (!comment) {
+      comment = target.ownerDocument.createComment(
+          "element replaced by bionic");
+      (target as any)._bionicComment = comment;
+    }
+    return comment;
+  }
+
+  /** Replaces the element with a comment if value is falsy. */
+  export const ifBinder: Binder = (target, value) => {
+    const comment: Comment = associatedCommentFor(target);
+    if (!value && target.parentNode !== null) {
+      target.parentNode.replaceChild(comment, target);
+    } else if (value && comment.parentNode !== null) {
+      comment.parentNode.replaceChild(target, comment);
+    }
+  };
+  builder.binders.add("if", ifBinder);
+
+  /** Replaces the element with a comment if value is truthy. */
+  export const unless: Binder = (target, value) => {
+    const comment: Comment = associatedCommentFor(target);
+    if (value && target.parentNode !== null) {
+      target.parentNode.replaceChild(comment, target);
+    } else if (!value && comment.parentNode !== null) {
+      comment.parentNode.replaceChild(target, comment);
+    }
+  };
+  builder.binders.add("unless", unless);
+
   export const attributeFactory: BinderFactory = (suffix) => {
     return (target, value) => {
       if (value === true) {
